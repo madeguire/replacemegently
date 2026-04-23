@@ -1,28 +1,59 @@
 # replacemegently
 
-This repo is a starter pack for a non-engineer, who wants to use cursor to build a full-stack application, e.g. a marketplace app.
+A full-stack marketplace application built with Next.js (TypeScript), Python FastAPI, and PostgreSQL.
 
-## Getting Started
+## Prerequisites
 
-![Fork this repo](images/fork-me.png)
+- **Node.js** (v18+) and **npm** — [install](https://nodejs.org/)
+- **Python 3** and **pip** — for the API (coming soon)
+- **PostgreSQL** via Homebrew — for the database (coming soon)
+- **Cursor** IDE — [install](https://cursor.sh/)
 
-0. Install git & install cursor
+## Project Structure
 
-1. Fork this repo (↗️) to your own github
-
-2. From your own repo, copy the Clone URL (↗️)
-
-3. Open a terminal (on mac: Cmd + Space and type 'Terminal') and run:
-```bash
-mkdir ~/Dev
-cd ~/Dev
-git clone <url>
+```
+.
+├── web/          # Next.js TypeScript frontend (App Router + Tailwind CSS)
+├── api/          # Python FastAPI backend (coming soon)
+├── .cursor/      # Cursor skills and configuration
+└── README.md
 ```
 
-4. Open cursor and open the repo (File -> Open Folder)
+## Quick Start
 
-5. Try out your first cursor command! In the chat type "/" then start to type the word t.e.a.c.h, press enter to get the command `teach-me`, then ask any question that comes to mind. Example:
-    - `/teach-me what are the cursor commands in this repo?`
+### Web App (Next.js)
 
-5. Build! example:
-    - `/plan I want to build a beautiful marketplace to sell my <really cool t-shirts|hamsters|artwork|surf boards|shoes and/or AI data infrastructure`
+```bash
+cd web
+npm install
+npm run dev
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000).
+
+### Available Scripts (web/)
+
+| Command         | Description                  |
+|-----------------|------------------------------|
+| `npm run dev`   | Start development server     |
+| `npm run build` | Create production build      |
+| `npm run start` | Serve production build       |
+| `npm run lint`  | Run ESLint                   |
+
+## Getting Started from Scratch
+
+1. Fork this repo to your own GitHub
+2. Clone it locally:
+   ```bash
+   git clone <your-fork-url>
+   cd skillful-marketplace
+   ```
+3. Open in Cursor (File -> Open Folder)
+4. Run `cd web && npm install && npm run dev`
+
+## Next Steps
+
+- [ ] Set up Python FastAPI backend in `api/`
+- [ ] Configure local PostgreSQL database
+- [ ] Wire API to database
+- [ ] Build marketplace features (listings, users, orders)
