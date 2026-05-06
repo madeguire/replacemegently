@@ -5,13 +5,16 @@ import Link from "next/link";
 import Image from "next/image";
 import ScrambleText from "./ScrambleText";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
 
 const navItems = ["Shop", "Collections", "About", "Journal"];
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems, justAdded } = useCart();
+  const { user } = useAuth();
   const [glitchKey, setGlitchKey] = useState(0);
+  const isAuthed = Boolean(user);
 
   useEffect(() => {
     if (justAdded) setGlitchKey((k) => k + 1);
@@ -38,15 +41,26 @@ export default function Header() {
         <div className="max-w-[1320px] mx-auto px-6 md:px-10">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
-            <Link href="/" className="shrink-0">
-              <Image
-                src="/human-logo.png"
-                alt="Human™"
-                width={140}
-                height={36}
-                className={`object-contain h-auto transition-all duration-300 ${mobileOpen ? "invert" : ""}`}
-                priority
-              />
+            <Link href="/" className="shrink-0 group/logo">
+              <div className="relative">
+                <Image
+                  src="/human-logo.png"
+                  alt="Human™"
+                  width={140}
+                  height={36}
+                  className={`relative z-[1] object-contain h-auto transition-all duration-300 ${mobileOpen ? "invert" : ""} group-hover/logo:logo-glitch`}
+                  priority
+                />
+                {/* Cyan ghost — shifts left */}
+                <Image
+                  src="/human-logo.png"
+                  alt=""
+                  width={140}
+                  height={36}
+                  aria-hidden
+                  className={`absolute inset-0 object-contain h-auto opacity-0 group-hover/logo:animate-logo-ghost-cyan pointer-events-none mix-blend-multiply ${mobileOpen ? "invert" : ""}`}
+                />
+              </div>
             </Link>
 
             {/* Desktop nav — centered */}
@@ -70,11 +84,22 @@ export default function Header() {
                   <path d="m21 21-4.3-4.3" />
                 </svg>
               </Link>
-              <Link href="/account" className="text-foreground/60 hover:text-foreground transition-colors" aria-label="Account">
+              <Link
+                href="/account"
+                className={`relative text-foreground/60 hover:text-foreground transition-colors ${isAuthed ? "text-foreground" : ""}`}
+                aria-label={isAuthed ? "Account (signed in)" : "Account"}
+                title={isAuthed ? "Signed in" : undefined}
+              >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="12" cy="8" r="5" />
                   <path d="M20 21a8 8 0 1 0-16 0" />
                 </svg>
+                {isAuthed && (
+                  <span
+                    aria-hidden
+                    className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-glitch-cyan-on-light shadow-[0_0_0_2px_white] animate-pulse"
+                  />
+                )}
               </Link>
 
               {/* Cart icon with glitch badge */}
@@ -232,8 +257,14 @@ export default function Header() {
               <Link
                 href="/account"
                 onClick={() => setMobileOpen(false)}
-                className="font-mono text-[11px] text-white/40 tracking-wider hover:text-glitch-cyan transition-colors"
+                className={`font-mono text-[11px] tracking-wider transition-colors flex items-center gap-1.5 ${isAuthed ? "text-glitch-cyan hover:text-white" : "text-white/40 hover:text-glitch-cyan"}`}
               >
+                {isAuthed && (
+                  <span
+                    aria-hidden
+                    className="inline-block w-1.5 h-1.5 rounded-full bg-glitch-cyan animate-pulse"
+                  />
+                )}
                 Account
               </Link>
               <Link

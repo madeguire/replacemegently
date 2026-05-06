@@ -1,8 +1,10 @@
 import Link from "next/link";
-import { collections } from "@/data/store";
+import { getCollections } from "@/lib/catalog-api";
 import CollectionCard from "./CollectionCard";
 
-export default function CollectionGrid() {
+export default async function CollectionGrid() {
+  const collections = await getCollections();
+
   return (
     <section className="relative max-w-[1320px] mx-auto px-6 md:px-10 pt-10 md:pt-14">
       <div className="flex items-end justify-between mb-6 md:mb-8">

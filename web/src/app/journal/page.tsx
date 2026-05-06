@@ -77,7 +77,7 @@ export default function JournalPage() {
             }}
           />
           <div
-            className="pointer-events-none absolute left-0 right-0 h-[2px] bg-glitch-red/30 z-10"
+            className="pointer-events-none absolute left-0 right-0 h-[2px] bg-glitch-cyan-on-light/25 z-10"
             style={{ animation: "hero-hbar 8s ease-in-out 2s infinite" }}
           />
           <div className="relative z-10 max-w-[1320px] mx-auto px-6 md:px-10 py-16 md:py-24">

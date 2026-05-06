@@ -109,19 +109,11 @@ export default function HeroSection() {
         className="pointer-events-none absolute left-0 right-0 h-[2px] bg-glitch-cyan/60 z-30 mix-blend-screen"
         style={{ animation: "hero-hbar 8s ease-in-out infinite" }}
       />
-      <div
-        className="pointer-events-none absolute left-0 right-0 h-[3px] bg-glitch-red/40 z-30 mix-blend-screen"
-        style={{ animation: "hero-hbar 8s ease-in-out 3s infinite" }}
-      />
 
       {/* ── Data corruption blocks ── */}
       <div
         className="pointer-events-none absolute w-24 h-3 bg-glitch-cyan/30 z-30"
         style={{ top: "18%", left: "12%", animation: "hero-corruption-1 6s step-end infinite" }}
-      />
-      <div
-        className="pointer-events-none absolute w-16 h-2 bg-glitch-red/40 z-30 hidden md:block"
-        style={{ top: "72%", right: "8%", animation: "hero-corruption-2 7s step-end infinite" }}
       />
       <div
         className="pointer-events-none absolute w-8 h-4 bg-glitch-cyan/20 z-30 hidden md:block"
@@ -198,7 +190,6 @@ export default function HeroSection() {
                     }}
                   />
                   <div className="absolute top-[30%] left-0 right-0 h-[3px] bg-white/20" />
-                  <div className="absolute top-[65%] left-0 right-0 h-[2px] bg-glitch-red/30" />
                 </div>
               )}
 

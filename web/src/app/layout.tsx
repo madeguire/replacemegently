@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { DM_Serif_Display, DM_Sans } from "next/font/google";
 import { CartProvider } from "@/context/CartContext";
+import { AuthProvider } from "@/context/AuthContext";
+import PageTransition from "@/components/PageTransition";
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
@@ -32,7 +34,12 @@ export default function RootLayout({
       className={`${dmSerif.variable} ${dmSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <CartProvider>{children}</CartProvider>
+        <AuthProvider>
+          <CartProvider>
+            <PageTransition />
+            {children}
+          </CartProvider>
+        </AuthProvider>
       </body>
     </html>
   );

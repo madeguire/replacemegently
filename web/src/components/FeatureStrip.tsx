@@ -21,7 +21,7 @@ export default function FeatureStrip() {
           {features.map((feature, i) => (
             <div
               key={i}
-              className={`flex items-center gap-4 py-7 px-2 md:px-6 ${
+              className={`flex flex-col sm:flex-row items-center justify-center text-center gap-3 sm:gap-4 py-7 px-2 md:px-6 ${
                 i < features.length - 1 ? "md:border-r border-border" : ""
               } ${i < 2 ? "border-b md:border-b-0" : ""}`}
             >

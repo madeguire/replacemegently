@@ -3,9 +3,11 @@ import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
-import { collections } from "@/data/store";
+import { getCollections } from "@/lib/catalog-api";
 
-export default function CollectionsPage() {
+export default async function CollectionsPage() {
+  const collections = await getCollections();
+
   return (
     <>
       <Header />

@@ -1,0 +1,12 @@
+fastapi==0.118.3
+uvicorn[standard]==0.40.0
+sqlalchemy==2.0.43
+psycopg[binary]==3.2.10
+alembic==1.16.5
+pydantic-settings==2.12.0
+email-validator==2.2.0
+python-jose[cryptography]==3.3.0
+# passlib 1.7.4 is incompatible with bcrypt >= 4.1 (uses removed `__about__` attr).
+# Pin bcrypt to the last compatible release.
+passlib[bcrypt]==1.7.4
+bcrypt==4.0.1

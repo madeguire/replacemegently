@@ -1,0 +1,1871 @@
+/* Analog API — Swagger UI custom theme
+ * Aesthetic: engineering subterranean. Black CRT terminal meets editorial brand.
+ * Same palette as the storefront, viewed from the developer side.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&display=swap");
+
+:root {
+  --bg: #0a0a0a;
+  --bg-2: #111111;
+  --bg-3: #161616;
+  --line: rgba(255, 255, 255, 0.08);
+  --line-strong: rgba(255, 255, 255, 0.16);
+  --ink: #f4f4f4;
+  --ink-dim: #b8b8b8;
+  --muted: #6b6b6b;
+  --cyan: #00fff0;
+  --cyan-dim: rgba(0, 255, 240, 0.5);
+  --cyan-faint: rgba(0, 255, 240, 0.08);
+  --red: #ff0040;
+  --red-dim: rgba(255, 0, 64, 0.55);
+  --amber: #ffb648;
+  --display: "DM Serif Display", "Times New Roman", serif;
+  --mono: "DM Mono", "JetBrains Mono", "IBM Plex Mono", ui-monospace, monospace;
+}
+
+/* ── Page chrome ──────────────────────────────────────────────────────── */
+
+html,
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: geometricPrecision;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+}
+
+/* CRT scanlines + grain over the whole page */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(255, 255, 255, 0.018) 2px,
+      rgba(255, 255, 255, 0.018) 3px
+    );
+  mix-blend-mode: screen;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(0, 255, 240, 0.04),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse at 100% 100%,
+      rgba(0, 255, 240, 0.03),
+      transparent 50%
+    );
+}
+
+#swagger-ui {
+  background: transparent;
+}
+
+.swagger-ui,
+.swagger-ui .wrapper {
+  font-family: var(--mono);
+  color: var(--ink);
+}
+
+/* Swagger ships inline SVG <defs> for its icons; the wrapping element
+ * sometimes reserves a block of vertical space. Force it to zero. */
+.swagger-ui svg.swagger-ui-svg,
+.swagger-ui svg[xmlns][style*="position"][style*="absolute"] {
+  position: absolute !important;
+  width: 0 !important;
+  height: 0 !important;
+  pointer-events: none;
+}
+
+.swagger-ui > div:first-child:not(.wrapper):not(.scheme-container):not(.information-container):empty,
+.swagger-ui > div:first-child:has(> svg:only-child) {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/**
+ * Center the main docs column to match `.filter-container` (1180px rail + 32px gutters).
+ * Without horizontal auto margins, `max-width` alone leaves the block flush left.
+ */
+.swagger-ui .wrapper {
+  max-width: 1180px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 32px;
+}
+
+/* ── Branded header (replaces Swagger topbar) ────────────────────────── */
+
+.swagger-ui .topbar {
+  display: none;
+}
+
+.skillful-topbar {
+  position: relative;
+  background:
+    radial-gradient(ellipse at 50% 100%, rgba(0, 255, 240, 0.04), transparent 60%),
+    radial-gradient(ellipse at 0% 0%, rgba(0, 255, 240, 0.04), transparent 55%),
+    #050505;
+  border-bottom: 1px solid var(--line-strong);
+  overflow: hidden;
+  isolation: isolate;
+  animation: skillful-power-flicker 11s steps(1, end) infinite;
+}
+
+/* Heavier scanlines than the body — this is the broadcast surface */
+.skillful-topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 2px,
+      rgba(0, 0, 0, 0.6) 2px,
+      rgba(0, 0, 0, 0.6) 3px
+    );
+  pointer-events: none;
+  animation: skillful-scanline-drift 0.5s linear infinite;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+/* The horizontal sweeping bar — kept, slightly hotter */
+.skillful-topbar::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 38%;
+  height: 1px;
+  background: var(--cyan);
+  opacity: 0.35;
+  animation: skillful-hbar 9s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+  box-shadow: 0 0 12px var(--cyan);
+}
+
+/* ── Top telemetry strip ─────────────────────────────────────────── */
+
+.skillful-topbar__telemetry {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  padding: 7px 32px 6px;
+  font-family: var(--mono);
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+  background: rgba(0, 0, 0, 0.55);
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.skillful-topbar__telemetry-item {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.skillful-topbar__telemetry-item--rec {
+  color: var(--red);
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-shadow: 0 0 6px rgba(255, 0, 64, 0.5);
+}
+
+.skillful-topbar__telemetry-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--red);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--red), 0 0 2px var(--red);
+  animation: skillful-rec-blink 1.4s ease-in-out infinite;
+}
+
+.skillful-topbar__telemetry-item--coord {
+  color: var(--cyan-dim);
+}
+
+.skillful-topbar__telemetry-item--ts {
+  color: var(--cyan);
+  margin-left: auto;
+  text-shadow: 0 0 6px rgba(0, 255, 240, 0.4);
+}
+
+/* ── Inner content (was getting padding from .skillful-topbar) ───── */
+
+.skillful-topbar__inner {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 26px 32px 22px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  z-index: 3;
+}
+
+.skillful-topbar__brand {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.skillful-topbar__eyebrow {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+}
+
+/* ── Title — chromatic split + occasional glitch displacement ───── */
+
+.skillful-topbar__title {
+  font-family: var(--display);
+  font-size: clamp(34px, 4.5vw, 52px);
+  line-height: 1;
+  color: var(--ink);
+  letter-spacing: -0.02em;
+  position: relative;
+  animation: skillful-tracking-error 12s steps(1, end) infinite;
+}
+
+.skillful-topbar__title em {
+  position: relative;
+  display: inline-block;
+  font-style: italic;
+  color: var(--cyan);
+  text-shadow:
+    0 0 18px rgba(0, 255, 240, 0.4),
+    0 0 2px rgba(0, 255, 240, 0.7);
+  isolation: isolate;
+}
+
+/* RGB-split ghosts for chromatic aberration. data-text duplicates the
+ * "Analog" string in the ::before / ::after layers. */
+.skillful-topbar__title em::before,
+.skillful-topbar__title em::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.skillful-topbar__title em::before {
+  color: var(--red);
+  transform: translate(2.5px, 0);
+  mix-blend-mode: screen;
+  opacity: 0.65;
+  animation: skillful-glitch-r 6.3s steps(1, end) infinite;
+  z-index: -1;
+}
+
+.skillful-topbar__title em::after {
+  color: rgba(255, 255, 255, 0.6);
+  transform: translate(-2.5px, 0);
+  mix-blend-mode: screen;
+  opacity: 0.5;
+  animation: skillful-glitch-c 5.9s steps(1, end) infinite;
+  z-index: -1;
+}
+
+.skillful-topbar__sub {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.skillful-topbar__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.skillful-topbar__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--line-strong);
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--ink-dim);
+}
+
+.skillful-topbar__chip a {
+  color: var(--ink-dim);
+  text-decoration: none;
+  border-bottom: 1px dashed transparent;
+  transition: color 120ms ease, border-color 120ms ease;
+}
+
+.skillful-topbar__chip a:hover {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan-dim);
+}
+
+.skillful-topbar__chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: skillful-blip 2.4s ease-in-out infinite;
+}
+
+/* WARN chip — red, faster pulse, ringed in danger */
+.skillful-topbar__chip--warn {
+  border-color: var(--red-dim);
+  color: var(--red);
+  background: rgba(255, 0, 64, 0.05);
+  letter-spacing: 0.2em;
+  text-shadow: 0 0 6px rgba(255, 0, 64, 0.3);
+}
+
+.skillful-topbar__chip--warn::before {
+  background: var(--red);
+  box-shadow: 0 0 10px var(--red), 0 0 2px var(--red);
+  animation: skillful-blip 1.4s ease-in-out infinite;
+}
+
+/* ── Animations ──────────────────────────────────────────────────── */
+
+@keyframes skillful-scanline-drift {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(4px); }
+}
+
+@keyframes skillful-hbar {
+  0%, 100% { opacity: 0; top: 18%; }
+  10% { opacity: 0; }
+  11% { opacity: 0.6; top: 18%; }
+  14% { opacity: 0; top: 22%; }
+  50% { opacity: 0; top: 60%; }
+  52% { opacity: 0.5; top: 60%; }
+  54% { opacity: 0; top: 64%; }
+  85% { opacity: 0; top: 38%; }
+  86% { opacity: 0.55; top: 38%; }
+  88% { opacity: 0; top: 40%; }
+}
+
+@keyframes skillful-blip {
+  0%, 100% { opacity: 1; }
+  48% { opacity: 1; }
+  50% { opacity: 0.25; }
+  52% { opacity: 1; }
+}
+
+@keyframes skillful-rec-blink {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.25; transform: scale(0.85); }
+}
+
+@keyframes skillful-power-flicker {
+  0%, 31.5%, 31.9%, 62.0%, 62.3%, 85.3%, 100% { filter: none; }
+  31.7% { filter: brightness(0.55) contrast(1.2); }
+  62.1% { filter: brightness(1.25); }
+  62.2% { filter: brightness(0.4); }
+  85.2% { filter: brightness(0.7) saturate(0.7); }
+}
+
+@keyframes skillful-tracking-error {
+  0%, 95%, 100% { transform: skewX(0) translateY(0); }
+  95.5% { transform: skewX(-2deg) translateY(1px) scaleY(0.99); }
+  95.8% { transform: skewX(1deg) translateY(0); }
+  96% { transform: skewX(0) translateY(0); }
+}
+
+@keyframes skillful-glitch-r {
+  0%, 92%, 93%, 98%, 98.5% { transform: translate(2.5px, 0); clip-path: inset(0); opacity: 0.65; }
+  92.3% { transform: translate(8px, 1px); clip-path: inset(35% 0 25% 0); opacity: 1; }
+  92.7% { transform: translate(-3px, 0); clip-path: inset(10% 0 60% 0); opacity: 0.85; }
+  98.2% { transform: translate(5px, -1px); clip-path: inset(60% 0 10% 0); opacity: 1; }
+}
+
+@keyframes skillful-glitch-c {
+  0%, 88%, 89%, 96%, 96.6% { transform: translate(-2.5px, 0); }
+  88.3% { transform: translate(-8px, 0); }
+  88.6% { transform: translate(3px, 1px); }
+  96.3% { transform: translate(-7px, -1px); }
+}
+
+/* ── Info block (auto-rendered by Swagger from FastAPI metadata) ────── */
+
+.swagger-ui .info {
+  margin: 40px 0 32px;
+  padding: 28px 28px 24px;
+  border: 1px solid var(--line-strong);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.015), transparent 70%),
+    var(--bg-2);
+  position: relative;
+}
+
+.swagger-ui .info::before,
+.swagger-ui .info::after {
+  content: "";
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-color: var(--cyan-dim);
+}
+
+.swagger-ui .info::before {
+  top: -1px;
+  left: -1px;
+  border-top: 1px solid;
+  border-left: 1px solid;
+}
+
+.swagger-ui .info::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 1px solid;
+  border-right: 1px solid;
+}
+
+.swagger-ui .info hgroup.main {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.swagger-ui .info .title {
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 400;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+}
+
+.swagger-ui .info .title small,
+.swagger-ui .info .title small.version-stamp {
+  display: inline-flex;
+  align-items: center;
+  background: transparent;
+  color: var(--cyan);
+  border: 1px solid var(--cyan-dim);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  margin-left: 12px;
+  font-weight: 400;
+}
+
+.swagger-ui .info .title small.version-stamp pre {
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.swagger-ui .info .description,
+.swagger-ui .info .description p,
+.swagger-ui .info .description li {
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+}
+
+.swagger-ui .info .description code {
+  background: rgba(0, 255, 240, 0.08);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 255, 240, 0.2);
+  padding: 1px 6px;
+  font-size: 12px;
+  border-radius: 0;
+}
+
+.swagger-ui .info .description blockquote {
+  margin: 14px 0;
+  padding: 10px 14px;
+  border-left: 2px solid var(--cyan-dim);
+  background: rgba(0, 255, 240, 0.04);
+  color: var(--ink);
+  font-style: normal;
+}
+
+.swagger-ui .info a {
+  color: var(--cyan);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--cyan-dim);
+}
+
+.swagger-ui .info a:hover {
+  color: var(--ink);
+  border-bottom-color: var(--ink);
+}
+
+.swagger-ui .info .base-url {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+/* ── Schemes / server picker ───────────────────────────────────────── */
+
+.swagger-ui .scheme-container {
+  background: transparent;
+  box-shadow: none;
+  border: 1px solid var(--line);
+  margin: 0 0 28px;
+  padding: 14px 18px;
+}
+
+.swagger-ui .scheme-container .schemes > label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.swagger-ui select {
+  background: var(--bg-2);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  box-shadow: none;
+}
+
+/* ── Tag (group) headers ───────────────────────────────────────────── */
+
+/* The whole tag row is clickable — make it feel like one unit */
+.swagger-ui .opblock-tag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: none;
+  border-left: 2px solid var(--line-strong);
+  padding: 18px 16px 18px 20px;
+  margin: 32px 0 0;
+  background: var(--bg-2);
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-left-color 160ms ease, background 160ms ease;
+}
+
+.swagger-ui .opblock-tag:hover {
+  background: rgba(0, 255, 240, 0.03);
+  border-left-color: var(--cyan-dim);
+}
+
+.swagger-ui .opblock-tag.is-open {
+  border-left-color: var(--cyan);
+}
+
+/* Left part: name + description stacked */
+.swagger-ui .opblock-tag > div:first-child,
+.swagger-ui .opblock-tag > span:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+  min-width: 0;
+}
+
+.swagger-ui .opblock-tag span,
+.swagger-ui .opblock-tag a {
+  font-family: var(--display);
+  font-size: 20px;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* Tag description — readable sentence case, not screaming uppercase */
+.swagger-ui .opblock-tag small {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  color: var(--ink-dim);
+  font-weight: 400;
+  margin-left: 0;
+  line-height: 1.5;
+}
+
+.swagger-ui .opblock-tag small::before {
+  content: none;
+}
+
+/* Right side: expand toggle — clear pill-shaped button */
+.swagger-ui .opblock-tag .expand-operation,
+.swagger-ui button.expand-methods,
+.swagger-ui button.expand-operation {
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  box-shadow: none;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+  white-space: nowrap;
+}
+
+/* Pseudo-label so the button says "show / hide" not just an arrow */
+.swagger-ui .opblock-tag .expand-operation::before,
+.swagger-ui button.expand-methods::before,
+.swagger-ui button.expand-operation::before {
+  content: "show";
+  display: inline;
+}
+
+.swagger-ui .opblock-tag.is-open .expand-operation::before,
+.swagger-ui .is-open ~ * .expand-operation::before {
+  content: "hide";
+}
+
+.swagger-ui .opblock-tag .expand-operation:hover,
+.swagger-ui button.expand-methods:hover,
+.swagger-ui button.expand-operation:hover {
+  border-color: var(--cyan-dim);
+  background: rgba(0, 255, 240, 0.05);
+  color: var(--cyan);
+}
+
+.swagger-ui .opblock-tag .expand-operation svg,
+.swagger-ui button.expand-methods svg,
+.swagger-ui button.expand-operation svg,
+.swagger-ui .expand-operation svg {
+  fill: var(--ink-dim);
+  transition: fill 120ms ease;
+}
+
+.swagger-ui .opblock-tag:hover .expand-operation svg,
+.swagger-ui button.expand-methods:hover svg,
+.swagger-ui button.expand-operation:hover svg {
+  fill: var(--cyan);
+}
+
+/* ── Operation blocks ──────────────────────────────────────────────── */
+
+.swagger-ui .opblock {
+  margin: 6px 0;
+  border-radius: 0;
+  border: 1px solid var(--line-strong);
+  border-left: 2px solid var(--line-strong);
+  background: var(--bg-2);
+  box-shadow: none;
+  position: relative;
+  overflow: hidden;
+  transition: border-color 160ms ease, border-left-color 160ms ease;
+}
+
+.swagger-ui .opblock.opblock-get { border-left-color: rgba(0, 255, 240, 0.3); }
+.swagger-ui .opblock.opblock-post { border-left-color: rgba(255, 255, 255, 0.2); }
+.swagger-ui .opblock.opblock-put { border-left-color: rgba(255, 182, 72, 0.35); }
+.swagger-ui .opblock.opblock-delete { border-left-color: rgba(255, 0, 64, 0.35); }
+.swagger-ui .opblock.opblock-patch { border-left-color: rgba(255, 182, 72, 0.25); }
+
+.swagger-ui .opblock:hover {
+  border-left-color: var(--cyan-dim);
+  background: rgba(0, 255, 240, 0.015);
+}
+
+/*
+ * Summary row layout:
+ *   .opblock-summary         → outer flex row (full width of card)
+ *   .opblock-summary-control → flex: 1, itself a flex row  [badge] [path] [description]
+ *   .opblock-control-arrow   → flex-shrink: 0, pinned to the far right
+ */
+.swagger-ui .opblock .opblock-summary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: pointer;
+  min-height: 52px;
+}
+
+.swagger-ui .opblock .opblock-summary:hover {
+  background: transparent;
+}
+
+/* Inner button takes all remaining width, lays its children in a row */
+.swagger-ui .opblock .opblock-summary-control,
+.swagger-ui .opblock-summary-control {
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 0 14px 16px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  cursor: pointer;
+  text-align: left;
+  overflow: hidden;
+}
+
+.swagger-ui .opblock .opblock-summary-control:focus,
+.swagger-ui .opblock .opblock-summary:focus {
+  outline: none;
+}
+
+/* Method badge — fixed, left anchor */
+.swagger-ui .opblock .opblock-summary-method {
+  flex-shrink: 0;
+  border-radius: 0;
+  background: transparent;
+  border: 1px solid currentColor;
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-shadow: none;
+  padding: 5px 10px;
+  min-width: 64px;
+  text-align: center;
+  box-shadow: none;
+}
+
+.swagger-ui .opblock.opblock-get .opblock-summary-method,
+.swagger-ui .opblock-get { border-color: var(--cyan-dim); }
+.swagger-ui .opblock.opblock-get .opblock-summary-method { color: var(--cyan); }
+.swagger-ui .opblock.opblock-post .opblock-summary-method { color: var(--ink); }
+.swagger-ui .opblock.opblock-put .opblock-summary-method { color: var(--amber); }
+.swagger-ui .opblock.opblock-delete .opblock-summary-method { color: var(--red); }
+.swagger-ui .opblock.opblock-patch .opblock-summary-method { color: var(--amber); }
+
+/* Path — immediately right of badge, never shrinks away */
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-path__deprecated {
+  flex-shrink: 0;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--ink);
+  letter-spacing: 0.02em;
+}
+
+.swagger-ui .opblock .opblock-summary-path,
+.swagger-ui .opblock .opblock-summary-path a,
+.swagger-ui .opblock .opblock-summary-path span,
+.swagger-ui .opblock .opblock-summary-path .nostyle,
+.swagger-ui .opblock .opblock-summary-path .nostyle span {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.swagger-ui .opblock .opblock-summary-path:hover,
+.swagger-ui .opblock .opblock-summary-path:hover span,
+.swagger-ui .opblock .opblock-summary-path:hover a {
+  color: var(--cyan);
+}
+
+.swagger-ui .opblock .opblock-summary-path__deprecated {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+/* Dim separator between path and description */
+.swagger-ui .opblock .opblock-summary-path::after {
+  content: " —";
+  color: var(--muted);
+  margin-left: 2px;
+}
+
+/* Description — fills leftover space, truncates gracefully */
+.swagger-ui .opblock .opblock-summary-description {
+  flex: 1;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-dim);
+  letter-spacing: 0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-align: left;
+  min-width: 0;
+}
+
+/* Expand/collapse arrow — the SEPARATE .opblock-control-arrow sibling button,
+ * pinned to the right end of the summary row */
+.swagger-ui .opblock-control-arrow,
+.swagger-ui .opblock .opblock-control-arrow {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 52px;
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--line);
+  box-shadow: none;
+  cursor: pointer;
+  padding: 0;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.swagger-ui .opblock-control-arrow:hover,
+.swagger-ui .opblock:hover .opblock-control-arrow {
+  background: rgba(0, 255, 240, 0.04);
+  border-left-color: var(--line-strong);
+}
+
+.swagger-ui .opblock-control-arrow svg,
+.swagger-ui .opblock .opblock-control-arrow svg {
+  fill: var(--muted);
+  transition: fill 160ms ease, transform 200ms ease;
+  width: 16px;
+  height: 16px;
+}
+
+.swagger-ui .opblock:hover .opblock-control-arrow svg {
+  fill: var(--cyan);
+}
+
+.swagger-ui .opblock.is-open .opblock-control-arrow svg {
+  fill: var(--cyan);
+  transform: rotate(180deg);
+}
+
+/* Also handle the inline .arrow svg if it exists inside the control button */
+.swagger-ui .opblock .opblock-summary-control svg.arrow,
+.swagger-ui .opblock-summary-control svg.arrow {
+  display: none;
+}
+
+/* Suppress the copy-to-clipboard button inside the summary row */
+.swagger-ui .opblock .opblock-summary .copy-to-clipboard,
+.swagger-ui .opblock-summary .copy-to-clipboard {
+  display: none;
+}
+
+.swagger-ui .opblock.is-open .opblock-summary {
+  border-bottom: 1px solid var(--line);
+}
+
+.swagger-ui .opblock .opblock-section-header {
+  background: var(--bg-3);
+  box-shadow: none;
+  border: none;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 16px;
+}
+
+.swagger-ui .opblock .opblock-section-header h4,
+.swagger-ui .opblock .opblock-section-header > label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muted);
+  font-weight: 500;
+}
+
+.swagger-ui .opblock .opblock-section-header h4::before {
+  content: "/// ";
+  color: var(--cyan-dim);
+}
+
+/* ── Description / parameters / responses ─────────────────────────── */
+
+.swagger-ui .opblock-description-wrapper,
+.swagger-ui .opblock-external-docs-wrapper,
+.swagger-ui .opblock-title_normal {
+  padding: 16px;
+  background: transparent;
+}
+
+.swagger-ui .opblock-description-wrapper p,
+.swagger-ui .opblock-external-docs-wrapper p,
+.swagger-ui .opblock-title_normal p,
+.swagger-ui .response-col_description__inner p,
+.swagger-ui .markdown p,
+.swagger-ui .renderedMarkdown p {
+  color: var(--ink-dim);
+  font-family: var(--mono);
+  font-size: 13px;
+  line-height: 1.65;
+}
+
+.swagger-ui .opblock-description-wrapper code,
+.swagger-ui .response-col_description__inner code,
+.swagger-ui .markdown code,
+.swagger-ui .renderedMarkdown code {
+  background: rgba(0, 255, 240, 0.08);
+  color: var(--cyan);
+  border: 1px solid rgba(0, 255, 240, 0.2);
+  padding: 1px 6px;
+  font-size: 11.5px;
+  border-radius: 0;
+}
+
+.swagger-ui table {
+  background: transparent;
+}
+
+.swagger-ui table thead tr td,
+.swagger-ui table thead tr th {
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 500;
+  border-bottom: 1px solid var(--line);
+  padding: 10px 12px;
+}
+
+.swagger-ui table tbody tr td {
+  border-color: var(--line);
+  padding: 12px;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 12.5px;
+  vertical-align: top;
+}
+
+.swagger-ui .parameter__name {
+  font-family: var(--mono);
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.swagger-ui .parameter__name.required::after,
+.swagger-ui .parameter__name.required span {
+  color: var(--red);
+}
+
+.swagger-ui .parameter__type,
+.swagger-ui .parameter__deprecated,
+.swagger-ui .parameter__in,
+.swagger-ui .response-col_status,
+.swagger-ui .response-col_links {
+  font-family: var(--mono);
+  color: var(--cyan);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+
+.swagger-ui .parameter__deprecated {
+  color: var(--red-dim);
+}
+
+.swagger-ui .response-col_status {
+  font-weight: 500;
+}
+
+.swagger-ui .response-col_description {
+  color: var(--ink);
+}
+
+.swagger-ui .responses-inner h4,
+.swagger-ui .responses-inner h5 {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* ── Inputs / buttons ─────────────────────────────────────────────── */
+
+.swagger-ui input[type="text"],
+.swagger-ui input[type="email"],
+.swagger-ui input[type="password"],
+.swagger-ui input[type="search"],
+.swagger-ui input[type="number"],
+.swagger-ui textarea {
+  background: var(--bg);
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 8px 10px;
+  box-shadow: none;
+  transition: border-color 120ms ease, box-shadow 120ms ease;
+}
+
+.swagger-ui input[type="text"]:focus,
+.swagger-ui input[type="number"]:focus,
+.swagger-ui textarea:focus {
+  border-color: var(--cyan);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 255, 240, 0.08);
+}
+
+.swagger-ui .btn {
+  background: transparent;
+  color: var(--ink);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 9px 16px;
+  box-shadow: none;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.swagger-ui .btn:hover {
+  background: rgba(0, 255, 240, 0.05);
+  color: var(--cyan);
+  border-color: var(--cyan-dim);
+}
+
+.swagger-ui .btn.execute {
+  background: var(--cyan);
+  color: #050505;
+  border-color: var(--cyan);
+  font-weight: 500;
+  letter-spacing: 0.24em;
+}
+
+.swagger-ui .btn.execute:hover {
+  background: transparent;
+  color: var(--cyan);
+  box-shadow: 0 0 0 1px var(--cyan), 0 0 18px rgba(0, 255, 240, 0.25);
+}
+
+.swagger-ui .btn.cancel {
+  color: var(--red);
+  border-color: var(--red-dim);
+}
+
+.swagger-ui .btn.cancel:hover {
+  background: rgba(255, 0, 64, 0.06);
+  color: var(--red);
+}
+
+.swagger-ui .try-out__btn {
+  margin-right: 0;
+}
+
+.swagger-ui .opblock-control-arrow {
+  color: var(--muted);
+}
+
+/* ── Code samples / response blocks ───────────────────────────────── */
+
+.swagger-ui .highlight-code,
+.swagger-ui .microlight,
+.swagger-ui pre,
+.swagger-ui .responses-wrapper .response pre,
+.swagger-ui .opblock-body pre.microlight,
+.swagger-ui .opblock-body .highlight-code .microlight {
+  background: #050505 !important;
+  color: var(--ink) !important;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  font-family: var(--mono) !important;
+  font-size: 12.5px !important;
+  line-height: 1.55;
+  padding: 14px 16px;
+  text-shadow: none !important;
+}
+
+.swagger-ui .copy-to-clipboard,
+.swagger-ui .download-contents {
+  background: rgba(0, 0, 0, 0.65);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  color: var(--ink-dim);
+  padding: 4px 8px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  transition: color 120ms ease, border-color 120ms ease, background 120ms ease;
+}
+
+.swagger-ui .copy-to-clipboard:hover,
+.swagger-ui .download-contents:hover {
+  border-color: var(--cyan-dim);
+  color: var(--cyan);
+  background: rgba(0, 255, 240, 0.06);
+}
+
+.swagger-ui .copy-to-clipboard button,
+.swagger-ui .download-contents button {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  filter: invert(1) hue-rotate(180deg) brightness(1.1);
+}
+
+.swagger-ui .copy-to-clipboard button:hover,
+.swagger-ui .download-contents button:hover {
+  filter: invert(1) hue-rotate(180deg) brightness(1.6);
+}
+
+.swagger-ui .response-col_status .response-undocumented {
+  color: var(--muted);
+}
+
+.swagger-ui .responses-table .response {
+  border-bottom: 1px solid var(--line);
+}
+
+/* Response status colour cues */
+.swagger-ui .responses-table .response-col_status {
+  color: var(--cyan);
+}
+
+.swagger-ui .responses-table .response[data-code^="4"] .response-col_status,
+.swagger-ui .responses-table .response[data-code^="5"] .response-col_status,
+.swagger-ui .response-col_status:has(+ .response-col_description__inner:has(.error)) {
+  color: var(--red);
+}
+
+/* ── Models / schemas (Swagger UI 5 / JSON Schema 2020-12 renderer) ── */
+
+/*
+ * Swagger UI 5 uses the JSON Schema 2020-12 renderer. The actual DOM is:
+ *
+ *   section.models h4                         → "Schemas" section header
+ *   .model-container                          → one card per schema
+ *     .model-box                              → wrapper
+ *       .json-schema-2020-12                  → schema renderer
+ *         .json-schema-2020-12-head           → header row (flex target)
+ *           button.json-schema-2020-12-accordion
+ *             .json-schema-2020-12-accordion__icon (svg chevron)
+ *             .json-schema-2020-12-accordion__children
+ *               .json-schema-2020-12__title   → schema name
+ *           button.json-schema-2020-12-expand-deep-button   → "Expand all"
+ *           .json-schema-2020-12__attribute   → "object" / "array<…>"
+ *         .json-schema-2020-12-body           → expanded property tree
+ *           .json-schema-2020-12-property     → each property
+ *             (recursively contains another .json-schema-2020-12)
+ *
+ * Strategy:
+ *   - Section wrapper + h4 keep the "tag group" feel
+ *   - .json-schema-2020-12-head becomes a flex row: name | type | toggle
+ *   - Replace Swagger's default chevron with our own at the far right
+ *   - Hide the "Expand all" button (clicking the row already toggles)
+ *   - Property rows nested inside .json-schema-2020-12-body get reduced
+ *     visual weight so the parent schema reads as the dominant card
+ */
+
+/* ── Section wrapper ──────────────────────────────────────────────── */
+
+/* Swagger v5 renders:
+ *   <section class="models is-open">
+ *     <h4>
+ *       <button class="models-control" aria-expanded>
+ *         <span>Schemas</span>
+ *         <svg>chevron</svg>
+ *       </button>
+ *     </h4>
+ *     …model cards…
+ *   </section>
+ *
+ * To match the operation-tag headers above (`.opblock-tag`), we treat
+ * `button.models-control` as THE BAR — no extra wrapper chrome on the
+ * <section> or <h4>. The schema cards below remain as their own group.
+ */
+
+.swagger-ui section.models {
+  border: none !important;
+  background: transparent !important;
+  border-radius: 0 !important;
+  margin: 32px 0 0;
+}
+
+.swagger-ui section.models h4 {
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+}
+
+/* ── "Schemas" header bar — mirror .opblock-tag ──────────────────── */
+
+.swagger-ui section.models h4 button.models-control {
+  width: 100%;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 16px;
+
+  border: none !important;
+  border-left: 2px solid var(--line-strong) !important;
+  background: var(--bg-2) !important;
+  padding: 18px 16px 18px 20px !important;
+  margin: 0 !important;
+
+  font-family: var(--display) !important;
+  font-size: 20px !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.01em !important;
+  text-transform: none !important;
+  color: var(--ink) !important;
+  text-align: left !important;
+
+  box-shadow: none !important;
+  outline: none !important;
+  cursor: pointer;
+  transition: border-left-color 160ms ease, background 160ms ease;
+}
+
+.swagger-ui section.models h4 button.models-control:hover {
+  background: rgba(0, 255, 240, 0.03) !important;
+  border-left-color: var(--cyan-dim) !important;
+}
+
+.swagger-ui section.models.is-open h4 button.models-control {
+  border-left-color: var(--cyan) !important;
+}
+
+.swagger-ui section.models h4 button.models-control:focus-visible {
+  border-left-color: var(--cyan) !important;
+}
+
+/* "Schemas" label */
+.swagger-ui section.models h4 button.models-control > span {
+  flex: 1;
+  min-width: 0;
+  color: var(--ink) !important;
+  font-family: var(--display) !important;
+  font-size: 20px !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Hide the default chevron — we render our own "show/hide" pill via ::after */
+.swagger-ui section.models h4 button.models-control svg {
+  display: none !important;
+}
+
+/* Show / hide pill on the right — mirror .expand-operation */
+.swagger-ui section.models h4 button.models-control::after {
+  content: "show";
+  flex-shrink: 0;
+  background: transparent;
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  padding: 6px 14px;
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+  white-space: nowrap;
+  transition: border-color 120ms ease, background 120ms ease, color 120ms ease;
+}
+
+.swagger-ui section.models.is-open h4 button.models-control::after {
+  content: "hide";
+}
+
+.swagger-ui section.models h4 button.models-control:hover::after {
+  border-color: var(--cyan-dim);
+  background: rgba(0, 255, 240, 0.05);
+  color: var(--cyan);
+}
+
+/* ── Each schema card ─────────────────────────────────────────────── */
+
+.swagger-ui section.models .model-container {
+  position: relative;
+  background: var(--bg-2) !important;
+  border: none !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-left: 2px solid rgba(0, 255, 240, 0.2) !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  transition: background 160ms ease, border-left-color 160ms ease;
+}
+
+.swagger-ui section.models .model-container:first-of-type,
+.swagger-ui section.models .model-container:last-of-type {
+  margin: 0 !important;
+}
+
+.swagger-ui section.models .model-container:last-child {
+  border-bottom: none !important;
+}
+
+.swagger-ui section.models .model-container:hover {
+  background: rgba(0, 255, 240, 0.015) !important;
+  border-left-color: var(--cyan-dim) !important;
+}
+
+/* Outer .model-box (Swagger v5 wraps the JSON Schema renderer in this) */
+.swagger-ui section.models .model-container > .model-box {
+  display: block !important;
+  background: transparent !important;
+  padding: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box;
+  border-radius: 0 !important;
+}
+
+/* ── JSON Schema 2020-12 renderer (the real schema body) ─────────── */
+
+/* Top-level schema wrapper inside model-box */
+.swagger-ui section.models .model-container .json-schema-2020-12 {
+  margin: 0 !important;
+  padding: 0 !important;
+  background: transparent !important;
+  border: none !important;
+}
+
+/*
+ * Header row — turn it into a flex row with our own layout.
+ * Inside live: [accordion button (with chevron + name)] [expand-deep-button] [attribute "object"]
+ * We want:     [name]                                   [type "object"]              [chevron]
+ */
+.swagger-ui section.models .model-container > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 14px;
+  padding: 14px 0 14px 20px !important;
+  min-height: 52px;
+  position: relative;
+  background: transparent !important;
+}
+
+/* The accordion button wraps icon + children — make it transparent and inline-flex */
+.swagger-ui section.models .json-schema-2020-12-accordion {
+  flex: 1;
+  min-width: 0;
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 0 !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+/* Hide Swagger's own chevron icon (we draw our own at the far right) */
+.swagger-ui section.models .model-container > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head > .json-schema-2020-12-accordion > .json-schema-2020-12-accordion__icon {
+  display: none !important;
+}
+
+/* The label container next to the (now-hidden) chevron */
+.swagger-ui section.models .json-schema-2020-12-accordion__children {
+  display: inline-flex !important;
+  flex-direction: row !important;
+  align-items: center !important;
+  gap: 10px;
+  min-width: 0;
+  flex: 1;
+}
+
+/* Schema name */
+.swagger-ui section.models .json-schema-2020-12__title {
+  font-family: var(--mono) !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+  letter-spacing: 0.03em;
+  display: inline-block !important;
+  text-transform: none;
+  line-height: 1;
+  vertical-align: middle;
+}
+
+/* The "object" / "array<object>" type hint */
+.swagger-ui section.models .model-container > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head > .json-schema-2020-12__attribute {
+  flex-shrink: 0;
+  margin-left: auto;
+  margin-right: 60px;     /* leave space for the toggle column */
+  padding: 4px 10px !important;
+  font-family: var(--mono) !important;
+  font-size: 10px !important;
+  letter-spacing: 0.18em;
+  color: var(--muted) !important;
+  text-transform: uppercase;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* "Expand all" / "Collapse all" deep-button — hide everywhere inside the
+ * Schemas section. The previous selector only matched the direct-child
+ * position; some renders nest the button one level deeper, leaving a
+ * stray white-bordered button visible. Use a broad descendant selector. */
+.swagger-ui section.models .json-schema-2020-12-expand-deep-button {
+  display: none !important;
+}
+
+/* ── Custom toggle arrow at the right edge ───────────────────────── */
+
+/*
+ * The accordion button is the click target. We can't move it visually
+ * without breaking click handling, but we CAN add a decorative chevron
+ * absolutely positioned to the right edge of the row that animates with
+ * the body--collapsed state on the sibling .json-schema-2020-12-body.
+ */
+.swagger-ui section.models .model-container > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 48px;
+  border-left: 1px solid var(--line);
+  pointer-events: none;
+  transition: background 160ms ease;
+}
+
+.swagger-ui section.models .model-container:hover > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head::after {
+  background: rgba(0, 255, 240, 0.04);
+}
+
+/* The chevron itself — drawn with two borders rotated 45deg */
+.swagger-ui section.models .model-container > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head::before {
+  content: "";
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: translateY(-65%) rotate(45deg);
+  transition: transform 200ms ease, border-color 160ms ease;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* When the body is NOT collapsed (i.e. expanded), flip the chevron */
+.swagger-ui section.models .model-container:has(.json-schema-2020-12-body:not(.json-schema-2020-12-body--collapsed)) > .model-box > .json-schema-2020-12 > .json-schema-2020-12-head::before {
+  transform: translateY(-35%) rotate(-135deg);
+  border-color: var(--cyan);
+}
+
+/* ── Expanded body (property tree) ────────────────────────────────── */
+
+.swagger-ui section.models .model-container .json-schema-2020-12-body {
+  background: var(--bg-3) !important;
+  border-top: 1px solid var(--line) !important;
+  border-left: none !important;
+  margin: 0 !important;
+  padding: 14px 20px 18px 32px !important;
+}
+
+.swagger-ui section.models .model-container .json-schema-2020-12-body--collapsed {
+  display: none !important;
+}
+
+/* Each property row — quieter than the parent schema header */
+.swagger-ui section.models .json-schema-2020-12-property {
+  display: block;
+  padding: 6px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.swagger-ui section.models .json-schema-2020-12-property:last-child {
+  border-bottom: none;
+}
+
+/* Property header (the property name + type, recursively wrapped in a json-schema-2020-12) */
+.swagger-ui section.models .json-schema-2020-12-property > .json-schema-2020-12 > .json-schema-2020-12-head {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: baseline !important;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px 0 !important;
+  background: transparent !important;
+  min-height: 0;
+}
+
+/* Reset accordion button styles inside property rows */
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12-accordion {
+  display: inline-flex !important;
+  flex: 0 1 auto;
+  background: transparent !important;
+  padding: 0 !important;
+  cursor: pointer;
+}
+
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12__title {
+  font-family: var(--mono) !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: var(--ink) !important;
+  letter-spacing: 0.02em;
+  vertical-align: middle;
+}
+
+/* Property type/format/constraint attributes (string, integer, ≥ 0, etc.) */
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12__attribute {
+  font-family: var(--mono) !important;
+  font-size: 11px !important;
+  color: var(--cyan) !important;
+  padding-left: 6px !important;
+  text-transform: lowercase;
+  background: transparent !important;
+  border: none;
+}
+
+.swagger-ui section.models .json-schema-2020-12__attribute--muted {
+  color: var(--muted) !important;
+}
+
+.swagger-ui section.models .json-schema-2020-12__attribute--warning {
+  color: var(--red) !important;
+}
+
+/* Required marker */
+.swagger-ui section.models .json-schema-2020-12-property--required > .json-schema-2020-12:first-of-type > .json-schema-2020-12-head .json-schema-2020-12__title:after {
+  color: var(--red) !important;
+  content: "*" !important;
+  font-weight: 700;
+  margin-left: 4px;
+}
+
+/* Property accordion icon — show but tone it down */
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12-accordion__icon {
+  display: inline-block !important;
+  width: 14px !important;
+  height: 14px !important;
+  margin-right: 4px;
+  vertical-align: middle;
+}
+
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12-accordion__icon svg {
+  fill: var(--muted);
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Hide property-level Expand all — also redundant */
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12-expand-deep-button {
+  display: none !important;
+}
+
+/* Keyword rows (description, default, etc.) inside expanded properties */
+.swagger-ui section.models .json-schema-2020-12-keyword {
+  display: block;
+  padding: 4px 0 4px 20px;
+  font-family: var(--mono);
+  font-size: 11px;
+}
+
+.swagger-ui section.models .json-schema-2020-12-keyword__name {
+  font-family: var(--mono) !important;
+  font-size: 11px !important;
+  color: var(--muted) !important;
+  margin: 0 8px 0 0 !important;
+  font-weight: 400 !important;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.swagger-ui section.models .json-schema-2020-12-keyword__value {
+  font-family: var(--mono) !important;
+  font-size: 11px !important;
+  color: var(--ink-dim) !important;
+}
+
+.swagger-ui section.models .json-schema-2020-12-keyword--description .json-schema-2020-12-keyword__value {
+  color: var(--ink-dim) !important;
+  font-style: normal;
+}
+
+/* Nested body lines — replace Swagger's dashed grey with our cyan rail */
+.swagger-ui section.models .json-schema-2020-12-property .json-schema-2020-12-body {
+  border-left: 1px solid var(--line) !important;
+  background: transparent !important;
+  border-top: none !important;
+  padding: 4px 0 4px 12px !important;
+  margin: 4px 0 4px 8px !important;
+}
+
+/* ── Try-it-out / loading / errors ───────────────────────────────── */
+
+.swagger-ui .loading-container .loading::after {
+  border-top-color: var(--cyan);
+  border-right-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+}
+
+.swagger-ui .errors-wrapper {
+  background: rgba(255, 0, 64, 0.05);
+  border: 1px solid var(--red-dim);
+  border-radius: 0;
+  color: var(--ink);
+}
+
+.swagger-ui .errors-wrapper .errors h4 {
+  color: var(--red);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Auth / modal ─────────────────────────────────────────────────── */
+
+.swagger-ui .dialog-ux .modal-ux {
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  border-radius: 0;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+}
+
+.swagger-ui .dialog-ux .modal-ux-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--bg-3);
+}
+
+.swagger-ui .dialog-ux .modal-ux-header h3 {
+  font-family: var(--display);
+  color: var(--ink);
+  font-weight: 400;
+}
+
+/* ── Filter bar ───────────────────────────────────────────────────── */
+
+/* Align the filter row to the same content rail as `.wrapper`
+ * (1180px max, 32px gutters) so it shares a width with opblocks below. */
+.swagger-ui .filter-container {
+  max-width: 1180px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 32px;
+  box-sizing: border-box;
+}
+
+/* `section.filter` ships with the `wrapper` class, which would double up
+ * the gutters and max-width inside `.filter-container`. Neutralize that. */
+.swagger-ui section.filter.wrapper {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.swagger-ui .filter {
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.swagger-ui .filter::before {
+  content: "filter_by_tag /";
+  position: absolute;
+  left: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cyan-dim);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.swagger-ui .filter .operation-filter-input {
+  background: var(--bg-2);
+  border: 1px solid var(--line-strong);
+  border-left: 2px solid var(--cyan-dim);
+  border-radius: 0;
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 12px 14px 12px 160px;
+  width: 100%;
+  box-shadow: none;
+  box-sizing: border-box;
+}
+
+.swagger-ui .filter .operation-filter-input::placeholder {
+  color: transparent;
+}
+
+.swagger-ui .filter .operation-filter-input:focus {
+  border-color: var(--cyan);
+  border-left-color: var(--cyan);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(0, 255, 240, 0.06);
+  background: var(--bg-3);
+}
+
+/* ── Servers picker label ─────────────────────────────────────────── */
+
+.swagger-ui .servers > label {
+  font-family: var(--mono);
+  color: var(--muted);
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* ── Footer signature ─────────────────────────────────────────────── */
+
+.skillful-footer {
+  position: relative;
+  margin: 56px auto 0;
+  padding: 22px 32px;
+  max-width: 1180px;
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.skillful-footer a {
+  color: var(--ink-dim);
+  text-decoration: none;
+  border-bottom: 1px dashed var(--line-strong);
+}
+
+.skillful-footer a:hover {
+  color: var(--cyan);
+  border-bottom-color: var(--cyan-dim);
+}
+
+.skillful-footer__signal {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.skillful-footer__signal::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: skillful-blip 2.4s ease-in-out infinite;
+}
+
+/* ── Misc cleanups ────────────────────────────────────────────────── */
+
+.swagger-ui hr {
+  border: none;
+  border-top: 1px solid var(--line);
+}
+
+.swagger-ui ::selection {
+  background: var(--cyan);
+  color: #050505;
+}
+
+.swagger-ui .model-toggle {
+  color: var(--cyan);
+}
+
+.swagger-ui .arrow svg {
+  fill: var(--muted);
+}
+
+.swagger-ui .opblock.is-open .opblock-summary .arrow svg,
+.swagger-ui .opblock-tag.is-open .arrow svg {
+  fill: var(--cyan);
+}
+
+.swagger-ui .opblock-deprecated .opblock-summary {
+  background: rgba(255, 0, 64, 0.04);
+}
+
+.swagger-ui .opblock-deprecated .opblock-summary-path {
+  color: var(--red-dim);
+}
+
+/* ── Glitchy heading flicker on hover ─────────────────────────────── */
+
+.swagger-ui .opblock-tag:hover span {
+  animation: skillful-glitch-text 0.6s steps(8, end);
+}
+
+@keyframes skillful-glitch-text {
+  0%   { text-shadow: none; transform: translate(0); }
+  20%  { text-shadow: -2px 0 var(--cyan), 2px 0 var(--red); transform: translate(-1px, 1px); }
+  40%  { text-shadow: 2px 0 var(--cyan), -2px 0 var(--red); transform: translate(1px, -1px); }
+  60%  { text-shadow: -1px 0 var(--cyan); transform: translate(0, 1px); }
+  100% { text-shadow: none; transform: translate(0); }
+}
+
+/* ── Responsive polish ───────────────────────────────────────────── */
+
+@media (max-width: 720px) {
+  .swagger-ui .wrapper { padding: 0 16px 64px; }
+  .skillful-topbar__inner { gap: 14px; padding: 22px 16px 18px; }
+  .skillful-topbar__title { font-size: 30px; }
+  .skillful-topbar__telemetry { padding: 6px 16px; gap: 14px; font-size: 8px; }
+  .skillful-topbar__telemetry-item--coord,
+  .skillful-topbar__telemetry-item--ts,
+  .skillful-topbar__telemetry-item:nth-child(4),
+  .skillful-topbar__telemetry-item:nth-child(5) { display: none; }
+  .swagger-ui .info { padding: 18px; }
+}

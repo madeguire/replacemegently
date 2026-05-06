@@ -406,7 +406,7 @@ export default function ReplacementScanner() {
         style={{ top: "12%", right: "15%", animation: "hero-corruption-1 7s step-end infinite" }}
       />
       <div
-        className="pointer-events-none absolute w-14 h-3 bg-glitch-red/10 z-10"
+        className="pointer-events-none absolute w-14 h-3 bg-glitch-cyan/12 z-10"
         style={{ bottom: "18%", left: "10%", animation: "hero-corruption-2 8s step-end infinite" }}
       />
 
@@ -428,8 +428,8 @@ export default function ReplacementScanner() {
         <div className="relative border border-white/10 bg-[#0d0d0d]">
           {/* Terminal title bar */}
           <div className="flex items-center gap-2 px-4 py-2.5 border-b border-white/10 bg-white/[0.02]">
-            <div className="flex gap-1.5">
-              <div className="w-2.5 h-2.5 rounded-full bg-glitch-red/60" />
+              <div className="flex gap-1.5">
+              <div className="w-2.5 h-2.5 rounded-full bg-zinc-500/70" />
               <div className="w-2.5 h-2.5 rounded-full bg-[#f0a030]/60" />
               <div className="w-2.5 h-2.5 rounded-full bg-glitch-cyan/60" />
             </div>

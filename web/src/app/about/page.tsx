@@ -82,7 +82,7 @@ export default function AboutPage() {
         {/* Mission split */}
         <section className="relative max-w-[1320px] mx-auto px-6 md:px-10 py-16 md:py-24">
           <div
-            className="pointer-events-none absolute top-16 right-8 w-20 h-2 bg-glitch-red/10"
+            className="pointer-events-none absolute top-16 right-8 w-20 h-2 bg-glitch-cyan-on-light/12"
             style={{ animation: "hero-corruption-2 7s step-end infinite" }}
           />
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-20 items-center">

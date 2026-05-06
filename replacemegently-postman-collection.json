@@ -1,0 +1,465 @@
+{
+  "info": {
+    "_postman_id": "8a3f7c2e-9b1d-4d6e-8f72-replacemegently01",
+    "name": "Replace me gently — Analog API",
+    "description": "Catalog API for the **Replace me gently** storefront. Read-only endpoints backed by PostgreSQL that power the Next.js web app.\n\n### Variables\n\n- `baseUrl` — defaults to `http://localhost:8000`. Override per-environment if you deploy the API elsewhere.\n- `productId` — sample product slug (default `pivot-pack`).\n- `collectionId` — sample collection slug (default `career-pivot`).\n- `category` — sample product category (default `Apparel`).\n\n### Tests\n\nEvery request includes a small Postman test that asserts a `2xx` status and (where relevant) checks response shape. The 404 examples assert a `404` status instead.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8000",
+      "type": "string"
+    },
+    {
+      "key": "productId",
+      "value": "pivot-pack",
+      "type": "string"
+    },
+    {
+      "key": "collectionId",
+      "value": "career-pivot",
+      "type": "string"
+    },
+    {
+      "key": "category",
+      "value": "Apparel",
+      "type": "string"
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          "pm.test('Response time is under 2s', function () {",
+          "  pm.expect(pm.response.responseTime).to.be.below(2000);",
+          "});"
+        ]
+      }
+    }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "description": "Service liveness checks.",
+      "item": [
+        {
+          "name": "GET /health — Liveness check",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["health"]
+            },
+            "description": "Returns a static `{ \"status\": \"ok\" }` payload. Used by uptime checks and the web smoke test."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "pm.test('Body is { status: \"ok\" }', function () {",
+                  "  const body = pm.response.json();",
+                  "  pm.expect(body).to.have.property('status', 'ok');",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "response": [
+            {
+              "name": "200 OK",
+              "originalRequest": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseUrl}}/health",
+                  "host": ["{{baseUrl}}"],
+                  "path": ["health"]
+                }
+              },
+              "status": "OK",
+              "code": 200,
+              "_postman_previewlanguage": "json",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" }
+              ],
+              "cookie": [],
+              "body": "{\n  \"status\": \"ok\"\n}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "description": "Browse and look up products in the catalog.",
+      "item": [
+        {
+          "name": "GET /products — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"]
+            },
+            "description": "Returns all products ordered by name."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Body is an array', function () {",
+                  "  pm.expect(pm.response.json()).to.be.an('array');",
+                  "});",
+                  "pm.test('Each product has expected fields', function () {",
+                  "  const items = pm.response.json();",
+                  "  if (items.length > 0) {",
+                  "    const p = items[0];",
+                  "    ['id', 'name', 'price', 'category'].forEach((k) => pm.expect(p).to.have.property(k));",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /products?category= — Filter by category",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products?category={{category}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "category",
+                  "value": "{{category}}",
+                  "description": "Exact category name to filter on, e.g. `Apparel`."
+                }
+              ]
+            },
+            "description": "Filter products by an exact `category` (case-sensitive). Examples: `Apparel`, `Bottles`, `Bags`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('All items match category', function () {",
+                  "  const items = pm.response.json();",
+                  "  const expected = pm.collectionVariables.get('category');",
+                  "  items.forEach((p) => pm.expect(p.category).to.eql(expected));",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /products?collection= — Filter by collection",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products?collection={{collectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products"],
+              "query": [
+                {
+                  "key": "collection",
+                  "value": "{{collectionId}}",
+                  "description": "Collection slug to filter on, e.g. `career-pivot` or `ai-does-it-better`."
+                }
+              ]
+            },
+            "description": "Filter products by `collection` slug."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Body is an array', function () { pm.expect(pm.response.json()).to.be.an('array'); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /products/{id} — Get one",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/{{productId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "{{productId}}"]
+            },
+            "description": "Look up a single product by its slug. Returns `404` if no such product exists."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Returned id matches productId variable', function () {",
+                  "  const expected = pm.collectionVariables.get('productId');",
+                  "  pm.expect(pm.response.json().id).to.eql(expected);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /products/{id} — 404 example",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/products/does-not-exist",
+              "host": ["{{baseUrl}}"],
+              "path": ["products", "does-not-exist"]
+            },
+            "description": "Demonstrates the 404 response shape: `{ \"detail\": \"Product not found\" }`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('Detail says Product not found', function () {",
+                  "  pm.expect(pm.response.json().detail).to.eql('Product not found');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Collections",
+      "description": "Curated groupings of products. Item counts are computed on read.",
+      "item": [
+        {
+          "name": "GET /collections — List all",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/collections",
+              "host": ["{{baseUrl}}"],
+              "path": ["collections"]
+            },
+            "description": "Returns all collections ordered by name. `itemCount` is computed from a `COUNT(*)` of related products at request time."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Each collection includes itemCount', function () {",
+                  "  const items = pm.response.json();",
+                  "  if (items.length > 0) {",
+                  "    pm.expect(items[0]).to.have.property('itemCount');",
+                  "  }",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /collections/{id} — Get one",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/collections/{{collectionId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["collections", "{{collectionId}}"]
+            },
+            "description": "Look up a single collection by its slug. Returns `404` if no such collection exists."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Returned id matches collectionId variable', function () {",
+                  "  const expected = pm.collectionVariables.get('collectionId');",
+                  "  pm.expect(pm.response.json().id).to.eql(expected);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /collections/{id} — 404 example",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/collections/does-not-exist",
+              "host": ["{{baseUrl}}"],
+              "path": ["collections", "does-not-exist"]
+            },
+            "description": "Demonstrates the 404 response shape: `{ \"detail\": \"Collection not found\" }`."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 404', function () { pm.response.to.have.status(404); });",
+                  "pm.test('Detail says Collection not found', function () {",
+                  "  pm.expect(pm.response.json().detail).to.eql('Collection not found');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Docs & Spec",
+      "description": "Browser-facing endpoints. These return HTML/JSON that's nicer to view in a tab than in Postman, but they're useful as link references.",
+      "item": [
+        {
+          "name": "GET /openapi.json — OpenAPI spec",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/openapi.json",
+              "host": ["{{baseUrl}}"],
+              "path": ["openapi.json"]
+            },
+            "description": "Machine-readable OpenAPI 3 schema for the API."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Has OpenAPI version', function () {",
+                  "  pm.expect(pm.response.json()).to.have.property('openapi');",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /docs — Swagger UI (HTML)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/docs",
+              "host": ["{{baseUrl}}"],
+              "path": ["docs"]
+            },
+            "description": "Branded Swagger UI. Best viewed in a browser at the same URL."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /redoc — ReDoc (HTML)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/redoc",
+              "host": ["{{baseUrl}}"],
+              "path": ["redoc"]
+            },
+            "description": "Reference-style API documentation. Best viewed in a browser at the same URL."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('Status is 200', function () { pm.response.to.have.status(200); });"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -2,11 +2,12 @@ import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/store";
+import { getProducts } from "@/lib/catalog-api";
 
-const newArrivals = products.slice(0, 4);
+export default async function NewArrivalsPage() {
+  const products = await getProducts();
+  const newArrivals = products.slice(0, 4);
 
-export default function NewArrivalsPage() {
   return (
     <>
       <Header />

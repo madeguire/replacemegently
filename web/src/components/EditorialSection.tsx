@@ -32,7 +32,7 @@ export default function EditorialSection() {
         style={{ top: "20%", left: "8%", animation: "hero-corruption-1 6s step-end infinite" }}
       />
       <div
-        className="pointer-events-none absolute w-12 h-3 bg-glitch-red/8 z-10"
+        className="pointer-events-none absolute w-12 h-3 bg-glitch-cyan-on-light/10 z-10"
         style={{ bottom: "25%", right: "12%", animation: "hero-corruption-2 7s step-end infinite" }}
       />
 

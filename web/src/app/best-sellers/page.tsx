@@ -2,11 +2,14 @@ import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/store";
+import { getProducts } from "@/lib/catalog-api";
 
-const bestSellers = [...products].sort((a, b) => b.replacementLikelihood - a.replacementLikelihood).slice(0, 4);
+export default async function BestSellersPage() {
+  const products = await getProducts();
+  const bestSellers = [...products]
+    .sort((a, b) => b.replacementLikelihood - a.replacementLikelihood)
+    .slice(0, 4);
 
-export default function BestSellersPage() {
   return (
     <>
       <Header />
@@ -21,7 +24,7 @@ export default function BestSellersPage() {
             }}
           />
           <div
-            className="pointer-events-none absolute left-0 right-0 h-[2px] bg-glitch-red/30 z-10"
+            className="pointer-events-none absolute left-0 right-0 h-[2px] bg-glitch-cyan-on-light/25 z-10"
             style={{ animation: "hero-hbar 8s ease-in-out 1s infinite" }}
           />
           <div className="relative z-10 max-w-[1320px] mx-auto px-6 md:px-10 py-16 md:py-24">
