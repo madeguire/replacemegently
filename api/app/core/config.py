@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -22,6 +22,18 @@ class Settings(BaseSettings):
         alias="ACCESS_TOKEN_EXPIRE_MINUTES",
     )
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
+
+    @field_validator("database_url", mode="after")
+    @classmethod
+    def _ensure_psycopg3_driver(cls, value: str) -> str:
+        # Hosted providers (Railway, Render, Heroku, etc.) hand out URLs as
+        # `postgres://` or `postgresql://`, but SQLAlchemy 2 + psycopg3 needs
+        # the explicit `postgresql+psycopg://` driver prefix.
+        if value.startswith("postgres://"):
+            value = "postgresql://" + value[len("postgres://") :]
+        if value.startswith("postgresql://"):
+            value = "postgresql+psycopg://" + value[len("postgresql://") :]
+        return value
 
     @property
     def cors_origin_list(self) -> list[str]:
