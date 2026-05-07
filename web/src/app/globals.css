@@ -330,7 +330,7 @@ body {
 }
 
 @keyframes logo-ghost-cyan {
-  0%   { opacity: 0; transform: translate(0); filter: brightness(0) invert(1) sepia(1) saturate(20) hue-rotate(140deg); }
+  0%   { opacity: 0; transform: translate(0); }
   10%  { opacity: 0.5; transform: translate(-3px, 1px); }
   25%  { opacity: 0.3; transform: translate(-1px, 0); }
   40%  { opacity: 0.6; transform: translate(-4px, -1px); }
@@ -341,7 +341,7 @@ body {
 }
 
 @keyframes logo-ghost-red {
-  0%   { opacity: 0; transform: translate(0); filter: brightness(0) invert(1) sepia(1) saturate(20) hue-rotate(-15deg); }
+  0%   { opacity: 0; transform: translate(0); }
   10%  { opacity: 0.4; transform: translate(3px, -1px); }
   25%  { opacity: 0.2; transform: translate(1px, 1px); }
   40%  { opacity: 0.5; transform: translate(4px, 0); }
@@ -361,6 +361,31 @@ body {
 
 .animate-logo-ghost-red {
   animation: logo-ghost-red 0.6s step-end 0.03s both !important;
+}
+
+/* ── RMG eyes glance toward wordmark on logo hover ─────────────────────
+   The robot icon sits on the left of the lockup; the `rmg` wordmark is
+   to its right. On hover, both eye pills shift slightly right (~3 viewBox
+   units) — the robot is glancing at its own name. The shift is small but
+   readable because the eyes are narrow vertical pills (~12.5 units wide). */
+.rmg-eye {
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-box: fill-box;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.group\/logo:hover .rmg-eye {
+  transform: translateX(3px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rmg-eye {
+    transition: none;
+  }
+  .group\/logo:hover .rmg-eye {
+    transform: none;
+  }
 }
 
 /* ── Page transition glitch ── */

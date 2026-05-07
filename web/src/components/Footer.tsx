@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { brandCopy } from "@/data/store";
+import RmgLogo from "./RmgLogo";
 import ScrambleText from "./ScrambleText";
 
 const shopLinks = [
@@ -44,12 +44,9 @@ export default function Footer() {
           {/* Brand */}
           <div className="md:col-span-1">
             <div className="mb-5">
-              <Image
-                src="/human-logo.png"
-                alt="Human™"
-                width={100}
-                height={28}
-                className="object-contain h-auto invert"
+              <RmgLogo
+                variant="long"
+                className="block w-[160px] h-auto text-white"
               />
             </div>
             <p className="font-body text-sm text-white/40 leading-relaxed">

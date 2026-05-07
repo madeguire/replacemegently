@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import Image from "next/image";
+import RmgLogo from "./RmgLogo";
 import ScrambleText from "./ScrambleText";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -41,24 +41,23 @@ export default function Header() {
         <div className="max-w-[1320px] mx-auto px-6 md:px-10">
           <div className="flex items-center justify-between h-[72px]">
             {/* Logo */}
-            <Link href="/" className="shrink-0 group/logo">
-              <div className="relative">
-                <Image
-                  src="/human-logo.png"
-                  alt="Human™"
-                  width={140}
-                  height={36}
-                  className={`relative z-[1] object-contain h-auto transition-all duration-300 ${mobileOpen ? "invert" : ""} group-hover/logo:logo-glitch`}
-                  priority
+            <Link href="/" className="shrink-0 group/logo" aria-label="RMG — Home">
+              <div
+                className={`relative w-[102px] h-[36px] ${
+                  mobileOpen ? "[--logo-eye:#0a0a0a]" : "[--logo-eye:#fff]"
+                }`}
+              >
+                <RmgLogo
+                  variant="short"
+                  className={`relative z-[1] block w-full h-full transition-colors duration-300 group-hover/logo:logo-glitch ${
+                    mobileOpen ? "text-white" : "text-foreground"
+                  }`}
                 />
-                {/* Cyan ghost — shifts left */}
-                <Image
-                  src="/human-logo.png"
-                  alt=""
-                  width={140}
-                  height={36}
-                  aria-hidden
-                  className={`absolute inset-0 object-contain h-auto opacity-0 group-hover/logo:animate-logo-ghost-cyan pointer-events-none mix-blend-multiply ${mobileOpen ? "invert" : ""}`}
+                {/* Cyan ghost — shifts left on hover */}
+                <RmgLogo
+                  variant="short"
+                  decorative
+                  className="absolute inset-0 block w-full h-full opacity-0 pointer-events-none text-glitch-cyan group-hover/logo:animate-logo-ghost-cyan"
                 />
               </div>
             </Link>
