@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrambleText from "@/components/ScrambleText";
@@ -42,6 +43,7 @@ export default function AccountPage() {
 
   return (
     <>
+      <PageView page="account" />
       <Header />
       <main className="flex-1">
         {user ? (

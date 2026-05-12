@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
@@ -12,6 +13,7 @@ export default async function CollectionsPage() {
 
   return (
     <>
+      <PageView page="collections" />
       <Header />
       <AnnouncementBar />
       <main className="flex-1">

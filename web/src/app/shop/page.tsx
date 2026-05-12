@@ -1,5 +1,6 @@
 export const dynamic = "force-dynamic";
 
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
@@ -11,6 +12,7 @@ export default async function ShopPage() {
 
   return (
     <>
+      <PageView page="shop" />
       <Header />
       <AnnouncementBar />
       <main className="flex-1">

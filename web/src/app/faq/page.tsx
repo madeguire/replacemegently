@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -44,6 +45,7 @@ export default function FAQPage() {
 
   return (
     <>
+      <PageView page="faq" />
       <Header />
       <main className="flex-1">
         <section className="relative bg-[#0a0a0a] overflow-hidden">

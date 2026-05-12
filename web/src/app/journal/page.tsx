@@ -1,3 +1,4 @@
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import AnnouncementBar from "@/components/AnnouncementBar";
 import Footer from "@/components/Footer";
@@ -64,6 +65,7 @@ const articles = [
 export default function JournalPage() {
   return (
     <>
+      <PageView page="journal" />
       <Header />
       <AnnouncementBar />
       <main className="flex-1">

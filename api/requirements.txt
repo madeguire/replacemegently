@@ -10,3 +10,4 @@ python-jose[cryptography]==3.3.0
 # Pin bcrypt to the last compatible release.
 passlib[bcrypt]==1.7.4
 bcrypt==4.0.1
+stripe>=13.0.0

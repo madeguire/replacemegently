@@ -11,6 +11,7 @@ from app.routers import (
     admin_catalog,
     admin_orders,
     auth,
+    checkout,
     collections,
     health,
     products,
@@ -176,6 +177,7 @@ def create_app() -> FastAPI:
     app.include_router(products.router)
     app.include_router(collections.router)
     app.include_router(auth.router)
+    app.include_router(checkout.router)
     app.include_router(admin_catalog.router)
     app.include_router(admin_orders.router)
 

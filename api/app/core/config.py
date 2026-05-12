@@ -23,6 +23,9 @@ class Settings(BaseSettings):
     )
     jwt_algorithm: str = Field(default="HS256", alias="JWT_ALGORITHM")
 
+    stripe_secret_key: str = Field(..., alias="STRIPE_SECRET_KEY")
+    stripe_webhook_secret: str = Field(default="", alias="STRIPE_WEBHOOK_SECRET")
+
     @field_validator("database_url", mode="after")
     @classmethod
     def _ensure_psycopg3_driver(cls, value: str) -> str:

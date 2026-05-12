@@ -24,6 +24,7 @@ if TYPE_CHECKING:
 
 class OrderStatus(str, enum.Enum):
     PENDING = "pending"
+    PAID = "paid"
     PROCESSING = "processing"
     SHIPPED = "shipped"
     DELIVERED = "delivered"
@@ -43,6 +44,9 @@ class Order(Base):
         index=True,
     )
     notes: Mapped[str | None] = mapped_column(Text, nullable=True)
+    stripe_checkout_session_id: Mapped[str | None] = mapped_column(String, nullable=True, unique=True)
+    stripe_payment_intent_id: Mapped[str | None] = mapped_column(String, nullable=True, unique=True)
+    shipping_cost: Mapped[Decimal] = mapped_column(Numeric(10, 2), nullable=False, default=Decimal("0"))
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True),
         nullable=False,

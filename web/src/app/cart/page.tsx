@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Link from "next/link";
@@ -9,9 +11,44 @@ import ScrambleText from "@/components/ScrambleText";
 
 export default function CartPage() {
   const { items, totalItems, totalPrice, updateQuantity, removeItem, clearCart } = useCart();
+  const [checkingOut, setCheckingOut] = useState(false);
+
+  async function handleCheckout() {
+    if (checkingOut || items.length === 0) return;
+    setCheckingOut(true);
+
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          items: items.map((i) => ({
+            productId: i.product.id,
+            size: i.size,
+            quantity: i.quantity,
+          })),
+          successUrl: `${window.location.origin}/checkout/success`,
+          cancelUrl: `${window.location.origin}/cart`,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        console.error("Checkout error:", data);
+        setCheckingOut(false);
+        return;
+      }
+
+      window.location.href = data.url;
+    } catch (err) {
+      console.error("Checkout error:", err);
+      setCheckingOut(false);
+    }
+  }
 
   return (
     <>
+      <PageView page="cart" />
       <Header />
       <main className="flex-1">
         <section className="relative bg-[#0a0a0a] overflow-hidden">
@@ -233,8 +270,22 @@ export default function CartPage() {
                     </div>
                   )}
 
-                  <button className="w-full bg-[#0a0a0a] text-white font-body text-[14px] font-semibold py-4 rounded-full hover:bg-glitch-cyan-on-light transition-colors duration-200">
-                    <ScrambleText text="Checkout" duration={800} />
+                  <button
+                    onClick={handleCheckout}
+                    disabled={checkingOut}
+                    className="w-full bg-[#0a0a0a] text-white font-body text-[14px] font-semibold py-4 rounded-full hover:bg-glitch-cyan-on-light transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {checkingOut ? (
+                      <span className="inline-flex items-center gap-2">
+                        <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="3" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                        Processing…
+                      </span>
+                    ) : (
+                      <ScrambleText text="Checkout" duration={800} />
+                    )}
                   </button>
 
                   <p className="font-mono text-[9px] text-muted/40 tracking-wider text-center mt-4">

@@ -1,5 +1,6 @@
 "use client";
 
+import PageView from "@/components/PageView";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ScrambleText from "@/components/ScrambleText";
@@ -7,6 +8,7 @@ import ScrambleText from "@/components/ScrambleText";
 export default function ContactPage() {
   return (
     <>
+      <PageView page="contact" />
       <Header />
       <main className="flex-1">
         <section className="relative bg-[#0a0a0a] overflow-hidden">

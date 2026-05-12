@@ -10,6 +10,7 @@ import {
   type ReactNode,
 } from "react";
 import type { Product } from "@/data/store";
+import { track } from "@/lib/analytics";
 
 export interface CartItem {
   product: Product;
@@ -78,8 +79,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
         if (idx >= 0) {
           const next = [...prev];
           next[idx] = { ...next[idx], quantity: next[idx].quantity + 1 };
+          track("add_to_cart", {
+            product_id: product.id,
+            size,
+            quantity_after: next[idx].quantity,
+          });
           return next;
         }
+        track("add_to_cart", { product_id: product.id, size, quantity_after: 1 });
         return [...prev, { product, size, quantity: 1 }];
       });
       triggerAddedFlash();
